@@ -1,4 +1,8 @@
 <?php
+// Start the session
+session_start();
+?>
+<?php
 /**
  * @package WordPress
  * @subpackage WP-Skeleton

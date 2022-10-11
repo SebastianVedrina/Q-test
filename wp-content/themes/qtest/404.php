@@ -4,7 +4,12 @@
  * @subpackage WP-Skeleton
  */
 
+
 get_header(); 
+
+print_r($_SESSION);
+
+
 get_template_part( 'menu', 'index' ); //the  menu + logo/site title ?>
 
 	<div class="two-thirds column alpha">

@@ -1,7 +1,37 @@
 <?php
 // Start the session
 session_start();
+
+if(!isset($_SESSION['token']))
+
+{
+
+    echo "<p align='center'>Please Login again ";
+
+    echo "<a href='http://localhost/qtest/login/'>Click Here to Login</a></p>";
+
+}
+
+else
+
+{
+
+    $now = time();
+ // checking the time now when home page starts
+
+    if($now > $_SESSION['expire'])
+
+    {
+
+        session_destroy();
+
+        echo "<p align='center'>Your session has expired! <a href='http://localhost/qtest/'>Login Here</a></p>";
+
+    }
+
+}
 ?>
+
 <?php
 /**
  * @package WordPress

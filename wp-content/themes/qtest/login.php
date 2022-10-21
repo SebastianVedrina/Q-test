@@ -1,8 +1,8 @@
 <?php
+
 /* Template Name: Login Page */
 
 get_header(); 
-
 
 if(isset($_POST['submit']))
 {
@@ -10,8 +10,7 @@ if(isset($_POST['submit']))
 }  
 
 ?>
-
-<form action="">
+<form action="<?php echo get_home_url(); ?>" method="POST">
 
     <label for="email"><b>Email</b></label>
     <input type="text" placeholder="Enter Email" name="email" required>
@@ -19,52 +18,68 @@ if(isset($_POST['submit']))
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
 
-    <input type="submit" value="Submit">
+    <input type="submit" name="submit" value="Submit">
 
 
 </form>
 
+<a href="http://localhost/qtest/logibnjhbgkjhn/">404</a>
+
 
 <?php 
-$info = array( "email" => "ahsoka.tano@q.agency",
-"password" => "Kryze4President"
-);
+// $info = array( "email" => "ahsoka.tano@q.agency",
+// "password" => "Kryze4President"
+// );
 
-$url = "https://symfony-skeleton.q-tests.com/api/v2/token";    
-$content = json_encode($info);
+function login(){
 
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_HEADER, false);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER,
-        array("Content-type: application/json"));
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
-
-$json_response = curl_exec($curl);
-
-$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-if ( $status != 201 ) {
-    // die("call to URL $url failed with status $status, response $json_response, curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl));
-}
+        $info = array( 
+        "email"     => $_POST['email'],
+        "password"  => $_POST['psw']
+        );
 
 
-curl_close($curl);
+        $url = "https://symfony-skeleton.q-tests.com/api/v2/token";    
+        $content = json_encode($info);
 
-$response = json_decode($json_response, true);
-echo '<pre>';
-print_r($response);
-echo '</pre>';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER,
+                array("Content-type: application/json"));
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
 
-print_r($response['token_key']);
-// $_SESSION['token_key'] = $response['token_key'];
+        $json_response = curl_exec($curl);
 
-setcookie('daka_kuki', json_encode($response['token_key']), time()+3600);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ( $status != 200 ) {
+            die("Wrong Credentials");
+        }
 
 
-$data = json_decode($_COOKIE['daka_kuki'], true);
+        curl_close($curl);
 
-print_r($data);
+        $response = json_decode($json_response, true);
+        echo '<pre>';
+        //print_r($response);
+        echo '</pre>';
 
+        // print_r($response['token_key']);
+
+        $_SESSION['token'] = $response['token_key'];
+        $_SESSION['start'] = time(); 
+
+        $_SESSION['expire'] = $_SESSION['start'] + (0.5 * 60) ; 
+
+
+        print_r($_SESSION['token']);
+
+        // $home_url = get_home_url();
+        // wp_redirect( $home_url );
+        // exit;
+       
+    }
+     
 ?>
